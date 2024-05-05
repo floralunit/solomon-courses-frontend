@@ -1,0 +1,44 @@
+[
+    {
+        "id": 6,
+        "title": "Rap",
+        "description": "Rap Course",
+        "author": "Kal Angel",
+        "price": 123
+    },
+    {
+        "id": 7,
+        "title": "BoomBap",
+        "description": "BoomBap course",
+        "author": "9Ass",
+        "price": 1231231
+    },
+    {
+        "id": 8,
+        "title": "Icpc",
+        "description": "Algo ICPC",
+        "author": "Birukov",
+        "price": 228
+    },
+    {
+        "id": 6,
+        "title": "Rap",
+        "description": "Rap Course",
+        "author": "Kal Angel",
+        "price": 123
+    },
+    {
+        "id": 7,
+        "title": "BoomBap",
+        "description": "BoomBap course",
+        "author": "9Ass",
+        "price": 1231231
+    },
+    {
+        "id": 8,
+        "title": "Icpc",
+        "description": "Algo ICPC",
+        "author": "Birukov",
+        "price": 228
+    }
+]
