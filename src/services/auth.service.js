@@ -1,16 +1,16 @@
 import api from "./api";
 import TokenService from "./token.service";
 const register = (username, password) => {
-    return api.post("/auth/signup", {
-        username,
-        password
+    return api.post("/user/registration", {
+        login: username,
+        password: password
     });
 };
 const login = (username, password) => {
     return api
-        .post("/auth/signin", {
-            username,
-            password
+        .get("/user/login", {
+            login: username,
+            password: password
         })
         .then((response) => {
             if (response.data.token) {

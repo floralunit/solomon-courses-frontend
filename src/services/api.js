@@ -6,6 +6,7 @@ const instance = axios.create({
     headers: {
         "Content-Type": "application/json",
     },
+    mode: 'no-cors'
 });
 
 export default instance;
