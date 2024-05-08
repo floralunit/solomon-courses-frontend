@@ -23,15 +23,19 @@ export default function UserCoursesPage() {
     };
 
     api.get(`/course?user_id=${currentUser.id}`)
-    .then(res => {
-        setIsLoaded(true);
-        setData(res.data);
-    })
-    .catch(error => {
-        console.error(error);
-        setIsLoaded(true);
-        setError(error);
-    });
+        .then(res => {
+            setIsLoaded(true);
+            setData(res.data);
+        })
+        .catch(error => {
+            console.error(error);
+            setIsLoaded(true);
+            setError(error);
+        });
+
+        const handleOpenCourse = (courseId) => {
+            alert(`Вы успешно открыли курс с ID ${courseId}!`);
+        };
 
     if (error) {
         return <div>Ошибка: {error.message}</div>;
@@ -44,25 +48,24 @@ export default function UserCoursesPage() {
         return (
             <div>
                 <div style={{ display: "flex", flexWrap: 'wrap', justifyContent: 'center' }}>
-                    {data.map(item =>
-             <div className="wrapper">
-                <div className="product-img">
-                    <img src={require('./course-image.jpg')}/>
-                </div>
-                <div className="product-info">
-                    <div className="product-text">
-                        <h1>{item.title}</h1>
-                        <h2>{item.author}</h2>
-                        <p>{item.description}</p>
-                        </div>
-                            <div className="product-price-btn">
-                            <p><span>{item.price}</span>$</p>
-                                <button type="button">Приступить</button>
+                    {data.map((item, idx) =>
+                        <div className="wrapper" key={idx}>
+                            <div className="product-img">
+                                <img src={require('./course-image.jpg')} />
+                            </div>
+                            <div className="product-info">
+                                <div className="product-text">
+                                    <h1>{item.title}</h1>
+                                    <h2>{item.author}</h2>
+                                    <p>{item.description}</p>
+                                </div>
+                                <div className="product-price-btn">
+                                    <button type="button" className="custom-btn btn-4" onClick={() => handleOpenCourse(item.id)}>Приступить</button>
+                                </div>
                             </div>
                         </div>
-                        </div>
                     )}
-            </div>
+                </div>
 
             </div>
         );

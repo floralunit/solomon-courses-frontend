@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
 import "../styles/Navbar.css";
 import { logout } from "../actions/auth";
+import { FaRegUserCircle, FaSignInAlt } from "react-icons/fa";
+import { TbSchool } from "react-icons/tb";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -10,7 +12,6 @@ import { useDispatch, useSelector } from "react-redux";
 export function Navbar() {
   const [dropdown, setDropdown] = useState(false);
   const dispatch = useDispatch();
-
 
   const { user: currentUser } = useSelector((state) => state.auth);
 
@@ -22,9 +23,9 @@ export function Navbar() {
   return (
     <header className="header">
       <div className="header__content">
-        <a href="#" className="logo">
-          <img className="logo__img" src={require('../resources/trollface.png')} alt="logo" />
-          Solomon Project
+        <a href="/" className="logo">
+          <TbSchool style={{ margin: '0 10px 0 0' }} />
+          Solomon courses
         </a>
 
         <nav className="nav">
@@ -35,16 +36,16 @@ export function Navbar() {
             {currentUser ? (
               <>
                 <li className="nav__item">
-                  <a className="nav__link" href="/">Мои курсы</a>
+                  <a className="nav__link" href="/my-courses">Мои курсы</a>
                 </li>
                 <li className="nav__item">
-                  <a className="btn" style={{ color: 'black' }} href="/signin">{currentUser.username}</a>
+                  <a href="/profile" ><FaRegUserCircle size={20} /></a>
                 </li>
               </>
 
             ) :
               <li className="nav__item">
-                <a className="btn" style={{ color: 'black' }} href="/signin">Войти</a>
+                <a href="/signin"><FaSignInAlt /></a>
               </li>}
           </ul>
         </nav>

@@ -1,0 +1,21 @@
+*{
+    font-family:'WixMadeforDisplay-Regular';
+}
+@font-face {
+    font-family: "WixMadeforDisplay-Regular";
+    src: local("WixMadeforDisplay-Regular"),
+     url("../resources/fonts/WixMadeforDisplay-Medium.ttf") format("truetype");
+    font-weight: bold;
+   }
+   @font-face {
+    font-family: "WixMadeforDisplay-SemiBold";
+    src: local("WixMadeforDisplay-SemiBold"),
+     url("../resources/fonts/WixMadeforDisplay-SemiBold.ttf") format("truetype");
+    font-weight: bold;
+   }
+@font-face {
+    font-family: "WixMadeforDisplay-Bold";
+    src: local("WixMadeforDisplay-Bold"),
+     url("../resources/fonts/WixMadeforDisplay-Bold.ttf") format("truetype");
+    font-weight: bold;
+   }

@@ -3,19 +3,16 @@ import { useDispatch, useSelector } from "react-redux";
 import "../../styles/LoginPage.css";
 import "./course-card.css";
 import { Navigate } from "react-router-dom";
-import axios from "axios";
 import { API_URL } from "../../global-const.js";
 import courses from "../../jsons/courses.json";
 import api from "../../services/api.js";
-import { logout } from "../../actions/auth.js";
+import "../../styles/button.css"
+import { FaCheck } from "react-icons/fa";
 
 export default function CoursesPage() {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [allCourses, setAllCourses] = useState([]);
-    const [userCourses, setUserCourses] = useState([]);
-
-    const dispatch = useDispatch();
 
     const { user: currentUser } = useSelector((state) => state.auth);
     api.get('/course')
@@ -47,8 +44,21 @@ export default function CoursesPage() {
     })
 
     const handleSubscribe = (courseId) => {
-
-        alert('Вы успешно записались на курс с ID ${courseId}!');
+        if (currentUser == null) {
+            // props.history.push("/signin");
+            // window.location.reload();
+        }
+        else{
+            api.post(`/user/enroll?user_id=${currentUser.id}&course_id=${courseId}`)
+            .then(res => {
+                alert(`Вы успешно записались на курс с ID ${courseId}!`);
+            })
+            .catch(error => {
+                console.error(error);
+                setError(error);
+                setIsLoaded(true); // Установить флаг только в случае ошибки
+            })
+        }
     };
 
     // useEffect(() => {
@@ -81,11 +91,11 @@ export default function CoursesPage() {
                                     <p>{item.description}</p>
                                 </div>
                                 {item.isUserSubscribed ? (
-                                     <p><span>Вы уже записаны на этот курс</span></p>
+                                     <p className="subscribe-text"><FaCheck size={20}/></p>
                                 ) : (
                                     <div className="product-price-btn">
-                                        <p><span>{item.price}</span>$</p>
-                                        <button type="button" onClick={() => handleSubscribe(item.id)}>Записаться</button>
+                                        <p><span>{item.price}</span>₽</p>
+                                        <button type="button" className="custom-btn btn-4" onClick={() => handleSubscribe(item.id)}>Купить</button>
                                     </div>
                                 )}
                             </div>
