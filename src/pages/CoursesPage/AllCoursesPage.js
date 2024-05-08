@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "../../styles/LoginPage.css";
 import "./course-card.css";
 import { Navigate } from "react-router-dom";
@@ -7,22 +7,49 @@ import axios from "axios";
 import { API_URL } from "../../global-const.js";
 import courses from "../../jsons/courses.json";
 import api from "../../services/api.js";
+import { logout } from "../../actions/auth.js";
 
 export default function CoursesPage() {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
-    const [data, setData] = useState([]);
+    const [allCourses, setAllCourses] = useState([]);
+    const [userCourses, setUserCourses] = useState([]);
 
-    api.get(`${API_URL}/course`)
-        .then(res => {
-            setIsLoaded(true);
-            setData(res.data);
-        })
-        .catch(error => {
-            console.error(error);
-            setIsLoaded(true);
-            setError(error);
-        });
+    const dispatch = useDispatch();
+
+    const { user: currentUser } = useSelector((state) => state.auth);
+    api.get('/course')
+    .then(res => {
+        if (currentUser !== null) {
+            api.get(`/course?user_id=${currentUser.id}`)
+                .then(res1 => {
+                    const coursesWithSubscription = res.data.map(course => {
+                        const isSubscribed = res1.data.some(userCourse => userCourse.id === course.id);
+                        return { ...course, isUserSubscribed: isSubscribed };
+                    });
+                    setAllCourses(coursesWithSubscription);
+                    setIsLoaded(true); // Установить флаг после успешного завершения всех запросов
+                })
+                .catch(error => {
+                    console.error(error);
+                    setError(error);
+                    setIsLoaded(true); // Установить флаг только в случае ошибки
+                });
+        } else {
+            setAllCourses(res.data);
+            setIsLoaded(true); // Установить флаг после успешного завершения всех запросов
+        }
+    })
+    .catch(error => {
+        console.error(error);
+        setError(error);
+        setIsLoaded(true); // Установить флаг только в случае ошибки
+    })
+
+    const handleSubscribe = (courseId) => {
+
+        alert('Вы успешно записались на курс с ID ${courseId}!');
+    };
 
     // useEffect(() => {
     //     if (data.length === 0) {
@@ -42,8 +69,8 @@ export default function CoursesPage() {
         return (
             <div>
                 <div style={{ display: "flex", flexWrap: 'wrap', justifyContent: 'center' }}>
-                    {data.map(item =>
-                        <div className="wrapper">
+                    {allCourses.map((item, idx) =>
+                        <div className="wrapper" key={idx}>
                             <div className="product-img">
                                 <img src={require('./course-image.jpg')} />
                             </div>
@@ -53,10 +80,14 @@ export default function CoursesPage() {
                                     <h2>{item.author}</h2>
                                     <p>{item.description}</p>
                                 </div>
-                                <div className="product-price-btn">
-                                    <p><span>{item.price}</span>$</p>
-                                    <button type="button">Записаться</button>
-                                </div>
+                                {item.isUserSubscribed ? (
+                                     <p><span>Вы уже записаны на этот курс</span></p>
+                                ) : (
+                                    <div className="product-price-btn">
+                                        <p><span>{item.price}</span>$</p>
+                                        <button type="button" onClick={() => handleSubscribe(item.id)}>Записаться</button>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     )}

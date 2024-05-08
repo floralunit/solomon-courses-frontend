@@ -6,6 +6,7 @@ import { Navigate } from "react-router-dom";
 import axios from "axios";
 import { API_URL } from "../../global-const.js";
 import courses from "../../jsons/courses.json";
+import api from "../../services/api.js";
 import { logout } from "../../actions/auth.js";
 
 export default function UserCoursesPage() {
@@ -21,26 +22,19 @@ export default function UserCoursesPage() {
         dispatch(logout());
     };
 
-    
-    useEffect(() => {
-        fetch(`${API_URL}/course?user_id=${currentUser.id}`)
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    setIsLoaded(true);
-                    setData(result);
-                },
-                // Примечание: важно обрабатывать ошибки именно здесь, а не в блоке catch(),
-                // чтобы не перехватывать исключения из ошибок в самих компонентах.
-                (error) => {
-                    setIsLoaded(true);
-                    setError(error);
-                }
-            )
-    }, [])
+    api.get(`/course?user_id=${currentUser.id}`)
+    .then(res => {
+        setIsLoaded(true);
+        setData(res.data);
+    })
+    .catch(error => {
+        console.error(error);
+        setIsLoaded(true);
+        setError(error);
+    });
 
     if (error) {
-        return <div>Ошибка: {error.message}</div>;
+        return <div>РћС€РёР±РєР°: {error.message}</div>;
     } else if (!isLoaded) {
         return <div className={"loadingDiv"}>
             {/* <ReactLoading type={"spinningBubbles"} color={"#673923"} height={'5%'} width={'5%'} className={"loadingBar"} /> */}
@@ -63,7 +57,7 @@ export default function UserCoursesPage() {
                         </div>
                             <div className="product-price-btn">
                             <p><span>{item.price}</span>$</p>
-                                <button type="button">Записаться</button>
+                                <button type="button">РџСЂРёСЃС‚СѓРїРёС‚СЊ</button>
                             </div>
                         </div>
                         </div>

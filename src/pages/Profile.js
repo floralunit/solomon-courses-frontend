@@ -1,28 +1,20 @@
 import React, {useEffect, useState} from "react";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import "../styles/LoginPage.css";
 import {Navigate} from "react-router-dom";
 import axios from "axios";
 import {API_URL} from "../global-const.js";
+import { logout } from "../actions/auth.js";
 
 export const Profile = () => {
     const { user: currentUser } = useSelector((state) => state.auth);
-    const headers = {Authorization: `Bearer ${currentUser.token}`};
-    const [commentsCount, setCommentsCount,] = useState([]);
+    //const headers = {Authorization: `Bearer ${currentUser.token}`};
 
-    useEffect(() => {
-        try {
-            axios
-                .post(`${API_URL}/comments/count/user/${currentUser.userId}`, {
-                    responseType: "json",
-                },{headers})
-                .then(function (response) {
-                    setCommentsCount(response.data);
-                });
-        } catch (ex) {
-            console.log(ex);
-        }
-    }, [])
+    const dispatch = useDispatch();
+    const logoutHandler = () => {
+        dispatch(logout());
+    };
+
 
     if (!currentUser) {
         return <Navigate to="/signin" />;
@@ -38,9 +30,12 @@ export const Profile = () => {
                                         <div className="login__field">
                                             <i className="login__icon fas fa-user"/>
                                             <input type="text" className="login__input" placeholder="Никнейм"
-                                                   value={currentUser.username}/>
+                                                   value={currentUser.login}/>
                                         </div>
-                                        <div>Ты написал(а) {commentsCount} комментариев</div>
+                                        <button className="button login__submit" type="submit" onClick={() => logoutHandler()}>
+                                <span className="button__text">Выйти</span>
+                                <i className="button__icon fas fa-chevron-right"/>
+                            </button>
                                     </form>
                                 </div>
                                 <div className="screen__background">
