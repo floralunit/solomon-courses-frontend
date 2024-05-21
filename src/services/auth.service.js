@@ -9,29 +9,31 @@ const register = (username, password) => {
 };
 
 const login = (username, password) => {
-    // return api
-    //     .post("/user/login", {
-    //         login: username,
-    //         password: password
-    //     })
-    //     .then((response) => {
-    //         if (response.data.token) {
-    //             TokenService.setUser(response.data);
-    //         }
-    //         return response.data;
-    //     });
-        return api
-        .get("/course")
+    return api
+        .post("/user/login", {
+            login: username,
+            password: password
+        })
         .then((response) => {
-            return TokenService.setUser({
-                "id": 3,
-                "testSessions": [],
-                "login": "floral",
-                "password": "12345678",
-                "token": "pipa",
-                "refreshToken": "pupa"
-            });
+            response.data.token = "pipa";
+            response.data.refreshToken = "pupa";
+            if (response.data.token) {
+                TokenService.setUser(response.data);
+            }
+            return response.data;
         });
+        // return api
+        // .get("/course")
+        // .then((response) => {
+        //     return TokenService.setUser({
+        //         "id": 3,
+        //         "testSessions": [],
+        //         "login": "floral",
+        //         "password": "12345678",
+        //         "token": "pipa",
+        //         "refreshToken": "pupa"
+        //     });
+        // });
 
 };
 const logout = () => {

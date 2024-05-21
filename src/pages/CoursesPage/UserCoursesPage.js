@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import "../../styles/LoginPage.css";
 import "./course-card.css";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import axios from "axios";
 import { API_URL } from "../../global-const.js";
 import courses from "../../jsons/courses.json";
@@ -60,7 +60,9 @@ export default function UserCoursesPage() {
                                     <p>{item.description}</p>
                                 </div>
                                 <div className="product-price-btn">
-                                    <button type="button" className="custom-btn btn-4" onClick={() => handleOpenCourse(item.id)}>Приступить</button>
+                                    <Link  to={`/course/${item.id}`}>
+                                   <button type="button" className="custom-btn btn-4" onClick={() => handleOpenCourse(item.id)}>Приступить</button>
+                                   </Link>
                                 </div>
                             </div>
                         </div>
