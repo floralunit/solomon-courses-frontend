@@ -1,7 +1,7 @@
-import React, {useState, useEffect} from "react";
-import {useDispatch, useSelector} from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import "../styles/LoginPage.css";
-import {NavLink, useNavigate, Navigate} from "react-router-dom";
+import { NavLink, useNavigate, Navigate } from "react-router-dom";
 import ErrorMessage from "../components/ErrorMessage";
 import { login } from "../actions/auth";
 
@@ -9,28 +9,29 @@ export const LoginPage = (props) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const { message } = useSelector(state => state.message);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const [loading, setLoading] = useState(false);
 
-    const dispatch = useDispatch();
-
-    const submitHandler = (e) => {
+    const submitHandler = async (e) => {
         e.preventDefault();
 
         setLoading(true);
 
-            dispatch(login(username, password))
-                .then(() => {
-                    props.history.push("/profile");
-                    window.location.reload();
-                })
-                .catch(() => {
-                    setLoading(false);
-                });
+        await dispatch(login(username, password))
+            .then(() => {
+                //props.history.push("/profile");
+                //<Navigate to="/profile" />;
+                window.location.reload();
+                navigate('/profile');
+            })
+            .catch(() => {
+                setLoading(false);
+            });
     };
 
     const { isLoggedIn } = useSelector(state => state.auth);
-
 
     const onChangeUsername = (e) => {
         const username = e.target.value;
@@ -42,59 +43,44 @@ export const LoginPage = (props) => {
         setPassword(password);
     };
 
-
+    const transparentInputStyle = {
+        backgroundColor: 'transparent', // Устанавливаем прозрачный фон
+        border: 'none', // Убираем границу
+        outline: 'none', // Убираем обводку при фокусе
+        color: '#333' // Цвет текста
+    };
     if (isLoggedIn) {
         return <Navigate to="/profile" />;
     }
-    return (
-        <div className={"loginpage"}>
-            <div className="container">
-                <div className="screen">
-                    <div className="screen__content">
-                        <form className="login" onSubmit={submitHandler}>
-                            <div className="login__field">
-                                <i className="login__icon fas fa-user"/>
-                                <input type="text" className="login__input" placeholder="Никнейм"
-                                       value={username}
-                                       onChange={(e) => setUsername(e.target.value)}/>
-                            </div>
-                            <div className="login__field">
-                                <i className="login__icon fas fa-lock"/>
-                                <input type="password" className="login__input" placeholder="Пароль"
-                                       value={password}
-                                       onChange={(e) => setPassword(e.target.value)}/>
-                            </div>
-                            <button className="button login__submit" type="submit">
-                                <span className="button__text">Войти</span>
-                                <i className="button__icon fas fa-chevron-right"/>
-                            </button>
-                            <div className="py-3">
-                                <div>
-                                    Нет аккаунта? <a href="signup" style={{color: 'white'}}>Зарегистрируйтесь</a>
-                                </div>
-                            </div>
-                        </form>
-                        {/*<div className="social-login">*/}
-                        {/*    <h3>log in via</h3>*/}
-                        {/*    <div className="social-icons">*/}
-                        {/*        <a href="#" className="social-login__icon fab fa-instagram"/>*/}
-                        {/*        <a href="#" className="social-login__icon fab fa-facebook"/>*/}
-                        {/*        <a href="#" className="social-login__icon fab fa-twitter"/>*/}
-                        {/*    </div>*/}
-                        {/*</div>*/}
+    if (loading) {
+        return <div>Грузится</div>;
+    } else {
+        return (
+            <div className={"loginpage"}>
+                <form className="login" onSubmit={submitHandler}>
+                    <h2>Авторизация</h2>
+                    <br />
+                    <input type="text" className="login__input" placeholder="Логин"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)} />
+                    <br />
+                    <input type="password" className="login__input" placeholder="Пароль"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)} />
+                    <br />
+                    <button type="submit" className="custom-btn btn-4" style={{ padding: '3px 12px', fontSize: '15px', width: '270px' }}> ВОЙТИ
+                    </button>
+                    <br />
+                    <div className="py-3">
+                        <div>
+                            Нет аккаунта? <a href="signup" style={{ color: 'white' }}>Зарегистрируйтесь</a>
+                        </div>
                     </div>
-                    <div className="screen__background">
-                        <span className="screen__background__shape screen__background__shape4"/>
-                        <span className="screen__background__shape screen__background__shape3"/>
-                        <span className="screen__background__shape screen__background__shape2"/>
-                        <span className="screen__background__shape screen__background__shape1"/>
-                    </div>
-                    {message ?
-                        <ErrorMessage variant="danger">{message}</ErrorMessage>
-                        :  <ErrorMessage variant="danger">В данной версии сайта не работает!</ErrorMessage>
-                    }
-                </div>
+                </form>
+                {message ?
+                    <ErrorMessage variant="danger">{message}</ErrorMessage> : <></>
+                }
             </div>
-        </div>
-    );
+        );
+    }
 }

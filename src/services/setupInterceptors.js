@@ -30,11 +30,12 @@ const setup = (store) => {
                     originalConfig._retry = true;
 
                     try {
-                        const rs = await axiosInstance.post("/auth/refresh-token", {
-                            refreshToken: TokenService.getLocalRefreshToken(),
-                        });
+                        // const rs = await axiosInstance.post("/auth/refresh-token", {
+                        //     refreshToken: TokenService.getLocalRefreshToken(),
+                        // });
 
-                        const { accessToken } = rs.data;
+                        // const { accessToken } = rs.data;
+                        const { accessToken } = "pip";
 
                         dispatch(refreshToken(accessToken));
                         TokenService.updateLocalAccessToken(accessToken);

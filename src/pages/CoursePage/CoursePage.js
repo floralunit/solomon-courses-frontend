@@ -35,6 +35,7 @@ export const CoursePage = (props) => {
             .then(res => {
                 setIsLoaded(true);
                 setCourse(res.data);
+                setSelectedChapter(res.data.chapters[0]);
             })
             .catch(error => {
                 console.error(error);
@@ -42,10 +43,6 @@ export const CoursePage = (props) => {
                 setError(error);
             });
     }, [id]); // Выполнить useEffect только при изменении id
-
-    const handleOpenCourse = (courseId) => {
-        alert(`Вы успешно открыли курс с ID ${courseId}!`);
-    };
     const [selectedChapter, setSelectedChapter] = useState(null);
     const [selectedLesson, setSelectedLesson] = useState(null);
     const [openChapters, setOpenChapters] = useState([]);
@@ -53,8 +50,12 @@ export const CoursePage = (props) => {
     const handleChapterClick = (chapter) => {
         if (openChapters.includes(chapter.id)) {
             setOpenChapters(openChapters.filter(id => id !== chapter.id));
+            setSelectedChapter(chapter);
+            setSelectedLesson(null);
         } else {
             setOpenChapters([...openChapters, chapter.id]);
+            setSelectedChapter(chapter);
+            setSelectedLesson(null);
         }
     };
 
@@ -67,20 +68,22 @@ export const CoursePage = (props) => {
         return <div>Ошибка: {error.message}</div>;
     } else if (isLoaded) {
         return (
-            <div style={{ color: 'white' }}>
-                <h1>{course.title}</h1>
-                <h2>{course.description}</h2>
-
-
+            <div style={{ width: '1100px', margin: '0 auto' }}>
+                <br />
+                <div className="borderDiv">
+                    <h1>{course.title}</h1>
+                    <h3>{course.description}</h3>
+                </div>
+                <br />
                 <div className="container">
                     <div className="chapter-list">
+                        <h2 style={{ textAlign: 'center' }}>Главы</h2>
                         <div className={"Parent"}>
                             <div className={"child1"}>
-                                <h3>Главы</h3>
-                                <li onClick={() => handleChapterClick(course.chapters[0])} style={{listStyleType:'none'}}>
-                                                <div onClick={() => handleChapterClick(course.chapters[0])}>
-                                                    {course.chapters[0].name}</div>
-                                            </li>
+                                <li onClick={() => handleChapterClick(course.chapters[0])} style={{ listStyleType: 'none' }}>
+                                    <div onClick={() => handleChapterClick(course.chapters[0])} style={{ cursor: 'pointer', margin: '0 0 0 5px' }}>
+                                        {course.chapters[0].name}</div>
+                                </li>
                                 <ol className="rectangle">
                                     {course.chapters.slice(1).map((chapter, index) => (
                                         <>
@@ -113,8 +116,13 @@ export const CoursePage = (props) => {
 
                         {selectedLesson && (
                             <div>
-                                <h3>{selectedLesson.name}</h3>
+                                <h2>{selectedLesson.name}</h2>
+                                <br />
                                 <p>{selectedLesson.text}</p>
+                                <br />
+                                <Link to={`/test/${selectedLesson.test.id}`}>
+                                    <button className="custom-btn btn-4" style={{ padding: '3px 12px', fontSize: '10px' }}>ПРИСТУПИТЬ К ТЕСТУ</button>
+                                </Link>
                             </div>
                         )}
                     </div>

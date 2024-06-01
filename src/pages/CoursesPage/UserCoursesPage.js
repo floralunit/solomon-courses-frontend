@@ -33,10 +33,6 @@ export default function UserCoursesPage() {
             setError(error);
         });
 
-        const handleOpenCourse = (courseId) => {
-            alert(`Вы успешно открыли курс с ID ${courseId}!`);
-        };
-
     if (error) {
         return <div>Ошибка: {error.message}</div>;
     } else if (!isLoaded) {
@@ -61,7 +57,7 @@ export default function UserCoursesPage() {
                                 </div>
                                 <div className="product-price-btn">
                                     <Link  to={`/course/${item.id}`}>
-                                   <button type="button" className="custom-btn btn-4" onClick={() => handleOpenCourse(item.id)}>Приступить</button>
+                                   <button type="button" className="custom-btn btn-4" >Приступить</button>
                                    </Link>
                                 </div>
                             </div>
